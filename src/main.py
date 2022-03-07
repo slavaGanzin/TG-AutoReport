@@ -5,7 +5,7 @@ import os
 import random
 import uuid
 from pathlib import Path
-
+import sys
 from environs import Env
 from pyrogram import Client, filters
 from pyrogram.raw.functions.account import ReportPeer
@@ -45,7 +45,8 @@ def on_start():
                 file.write(session_string)  # noqa
 
         print("Програма сконфігурована")
-        print("Перезапустіть програму щоб почати користування")
+        # print("Перезапустіть програму щоб почати користування")
+        os.system('python src/main.py')
         exit()
 
 
@@ -62,6 +63,9 @@ async def cmd_report(client, message):
 
     with open(Path('ban_channels.txt')) as file:
         ids = list(map(str.strip, file.readlines()))
+    if sys.argv[1]:
+        ids = list(map(str.strip, sys.argv[1:]))
+    print(ids)
 
     random.shuffle(ids)  # Перемішуємо список каналів
     limited_ids = ids[:MAX_REPORT_AMOUNT]  # Беремо перші 30 каналів із перемішаного списку
