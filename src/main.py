@@ -22,8 +22,6 @@ session_path = Path('session')
 
 MAX_REPORT_AMOUNT = 30  # Максимальна кількість репортів за 1 запуск програми
 
-print(f"ВЕРСІЯ: {__version__}")
-
 
 def on_start():
     if session_path.exists():
@@ -39,6 +37,7 @@ def on_start():
             return Client(session_string, api_id, api_hash)
 
     else:
+        print(f"ВЕРСІЯ: {__version__}")
         with Client(uuid.uuid4().hex, api_id, api_hash) as tmp_app:
             with open(session_path, 'w') as file:
                 session_string = tmp_app.export_session_string()
@@ -65,9 +64,14 @@ async def cmd_report(client, message):
         ids = list(map(str.strip, file.readlines()))
     if sys.argv[1]:
         ids = list(map(str.strip, sys.argv[1:]))
-    print(ids)
+
+    ids = [id.replace('t.me/', '@') for id in ids]
+    ids = [id if id[0] == '@' else '@'+id for id in ids]
+
 
     random.shuffle(ids)  # Перемішуємо список каналів
+    print(ids)
+
     limited_ids = ids[:MAX_REPORT_AMOUNT]  # Беремо перші 30 каналів із перемішаного списку
     length = len(limited_ids)
 
