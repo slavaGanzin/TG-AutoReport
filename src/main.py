@@ -70,16 +70,17 @@ async def cmd_report(client, message):
 
 
     random.shuffle(ids)  # Перемішуємо список каналів
-    print(ids)
 
     limited_ids = ids[:MAX_REPORT_AMOUNT]  # Беремо перші 30 каналів із перемішаного списку
     length = len(limited_ids)
 
+    default_message = 'підтримка російскої окупації'
+    message = input("Введіть вашу скаргу: "+default_message) or default_message
     for _, i in enumerate(limited_ids, start=1):
         try:
             peer: InputPeerChannel = await client.resolve_peer(i)
             response = await client.send(
-                data=ReportPeer(peer=peer, reason=InputReportReasonOther(), message="Тероризм"))
+                data=ReportPeer(peer=peer, reason=InputReportReasonOther(), message=message))
             print(f"[{_}/{length}] Канал {i} отримав скаргу, {response}")
             await client.send_message("me", f"[{_}/{length}] Канал {i} отримав скаргу, {response}")
 
