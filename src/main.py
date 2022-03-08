@@ -45,7 +45,7 @@ def on_start():
 
         print("Програма сконфігурована")
         # print("Перезапустіть програму щоб почати користування")
-        os.system('python src/main.py')
+        os.system('python ' + ' '.join(sys.argv))
         exit()
 
 
@@ -62,12 +62,11 @@ async def cmd_report(client, message):
 
     with open(Path('ban_channels.txt')) as file:
         ids = list(map(str.strip, file.readlines()))
-    if sys.argv[1]:
+    if len(sys.argv)>1:
         ids = list(map(str.strip, sys.argv[1:]))
 
     ids = [id.replace('t.me/', '@') for id in ids]
     ids = [id if id[0] == '@' else '@'+id for id in ids]
-
 
     random.shuffle(ids)  # Перемішуємо список каналів
 
